@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="pop.css">
+    <script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <button type=submit class="btn" onclick="openPopup()" onmousedown="sound1.play()">누르면 이겼을때 팝업창</button>
+        <div class="popup" id="popup">
+            <img src="winpop.jpg">
+            <h2>YOU WIN!!!</h2>
+            <p><b>축하합니다! 승리했어요!</b></p>
+            <div class="controls">
+                <a href="close">게임종료</a>
+                <button class="button" onclick="closePopup()"><b>재시작</b></button>
+        </div>
+    </div>
+    <script>
+        let popup= document.getElementById("popup");
+
+        function openPopup(){
+            popup.classList.add("open-popup");
+        }
+        
+        function closePopup(){
+            popup.classList.remove("open-popup");
+        }
+    </script>
+    
+    <script>
+        var sound1 = new Audio();
+        sound1.src = "win.mp3"
+    </script>
+</body>
+</html>

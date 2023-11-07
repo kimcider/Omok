@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function goUrl(){
+            let url = 'baduk.html';
+            location.href = url;
+        }
+        btn.addEventListener('click', goUrl);
+
+    </script>
+</head>
+<body>
+    <!-- 로그인폼 -->
+    <section class="login_form">
+        <h1 style="font-size: 15px;">N&nbspI&nbspN&nbspJ&nbspA&nbsp&nbsp F&nbspI&nbspV&nbspE</h1>
+        <form name="loginForm" method="get" action="baduk.html">
+            <div class="int-area">
+                <input type="text" name="id" id="id" autocomplete="off" required>
+                <label for = "id">USER NAME</label>
+            </div> 
+            <div class="int-area">  
+                <input type="password" name="pw" id="pw"
+                autocomplete="off" required>
+                <label for="pw">PASSWORD</label>
+            </div>
+            <div class="btn-area">
+                <button id="btn"
+                 type="submit" onclick="location.href='baduk.html'">START</button>
+                
+            </div>
+        </form>
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+            <!-- 게임 방식 가이드 -->
+            <p class="title" style="color:yellow; background-color: black; font-size: 12px; font-weight: bold; width:max-content" ><img src="arrow1.jpg"> HOW TO PLAY?</p>
+            <div class="text"><p>검은표창과 흰색표창 중에</p>
+            <p><b>먼저 5개</b>를 <b>연속</b>으로</p>
+            <p>바둑판위에 두는 플레이어가</p>
+            <p>승리하는 게임입니다.</p>
+        </div>
+        <!-- bgm on/off -->
+        <audio preload="auto" onloadstart="this.volume=0.05" loop="true" id="player" src="bgm_login.mp3"></audio>
+        <div class="button" style='width:80px;float:right;'>
+            <button onclick="document.getElementById('player').play()" style="background-color: black; color:whitesmoke">BGM on</button>
+            <button onclick="document.getElementById('player').pause()" style="background-color: black; color:dimgrey">BGM off</button>
+        </div>
+    </section>
+    </body>
+    <!-- 입력칸이 비었을 때 입력해달라는 경고문 출력 -->
+    <script>
+            let id = $('#id');
+            let pw = $('#pw');
+            let btn = $('#btn');
+
+            $(btn).on('click', function(){
+                if($(id).val()==""){
+                    $(id).next('label').addClass('warning');
+                    setTimeout(function(){
+                        $('label').removeClass('warning');
+                    },1500);
+                }
+                else if($(pw).val()==""){
+                    $(pw).next('label').addClass('warning');
+                    setTimeout(function(){
+                        $('label').removeClass('warning');
+                    },1500);
+                }
+            });
+    </script>
+        
+</body>
+</html>
