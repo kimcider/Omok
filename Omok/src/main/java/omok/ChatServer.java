@@ -15,7 +15,7 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint("/ChatingServer")
 public class ChatServer {
 	private Player[] player;
-	private Board board;
+	private static Board board;
 	private static int turn;
 	
 	public ChatServer() {
