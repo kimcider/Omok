@@ -20,8 +20,9 @@
 		};
 		// 웹소켓 서버에 연결되었을 때 실행
 		webSocket.onopen = function(event) {
-			sendMessage("id ${param.chatId}");
+			webSocket.send("id ${param.chatId}");
 		};
+		
 		// 메시지 전송
 		function sendMessage(row, col) {
 			webSocket.send(row + ' ' + col); // 서버로 전송
@@ -29,15 +30,11 @@
 		
 		// 메시지를 받았을 때 실행
 		webSocket.onmessage = function(event) {
-			console.log(event.data);
-			console.log("받음");
 			var message = event.data.split("|"); // 대화명과 메시지 분리
 			var turn = message[0];
-			//var row = message[1];
-			//var col = message[2];
+			var row = message[1];
+			var col = message[2];
 			
-			const [row, col] = [message[1], message[2]]
-			console.log(row);
 			var imgSrc = []
 			imgSrc[0] = '../img/board_black.jpg';
 			imgSrc[1] = '../img/board_white.jpg';
