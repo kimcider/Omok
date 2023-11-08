@@ -15,6 +15,8 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint("/ChatingServer")
 public class ChatServer {
 	private Player[] player;
+	/* 클라이언트가 접속할 떄마다 ServerEndPoint가 새로 생성되는 듯 보인다.
+	 * board와 turn을 각 클라이언트들이 공유하지 않기 때문에 static으로 선언하였다. */
 	private static Board board;
 	private static int turn;
 	
