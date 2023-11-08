@@ -12,7 +12,8 @@
 	
 	<link rel="stylesheet" href="style2.css">
 	<script>
-		var webSocket = new WebSocket("ws://localhost:8000/Omok/ChatingServer");
+		var webSocket = new WebSocket("ws://192.168.0.122:8000/Omok/ChatingServer");
+		//var webSocket = new WebSocket("ws://localhost:8000/Omok/ChatingServer");
 		var chatWindow, chatMessage, chatId;
 		
 		window.onload = function() {
