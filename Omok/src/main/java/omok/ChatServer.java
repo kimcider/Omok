@@ -15,75 +15,72 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint("/ChatingServer")
 public class ChatServer {
 	private Player[] player;
-	/* 클라이언트가 접속할 떄마다 ServerEndPoint가 새로 생성되는 듯 보인다.
-	 * board와 turn을 각 클라이언트들이 공유하지 않기 때문에 static으로 선언하였다. */
+	/*
+	 * 클라이언트가 접속할 떄마다 ServerEndPoint가 새로 생성되는 듯 보인다. board와 turn을 각 클라이언트들이 공유하지 않기
+	 * 때문에 static으로 선언하였다.
+	 */
 	private static Board board;
 	private static int turn;
-	
+
 	public ChatServer() {
 		super();
 		player = new Player[2];
 		board = new Board(19);
 		turn = 0;
 	}
+
 	private static Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
 	// 순서를 유지하지 않고 저장하며, 중복 저장이 불가능하다.
-	
-	
+
 	@OnOpen // 클라이언트 접속 시 실행
 	public void onOpen(Session session) {
 		int index = Integer.valueOf(session.getId());
 		int sessionID = Integer.valueOf(session.getId());
-		if(sessionID >= 2) return;
+		if (sessionID >= 2)
+			return;
 		clients.add(session); // 세션 추가
-		System.out.println("웹소켓 연결: " + session.getId());
-		
+
 		player[index] = new Player("", "0".equals(session.getId()) ? "O" : "X");
-		System.out.println("index: " + index);
-		System.out.println("player[index]: " + player[index]);
-		System.out.println(player[index].getStone());
 	}
 
 	@OnMessage // 메시지를 받으면 실행
 	public void onMessage(String message, Session session) throws IOException {
 		int sessionID = Integer.valueOf(session.getId());
-		if(sessionID >= 2) return;
-		if(message.startsWith("id ")) {
-			System.out.println(message);
+		if (sessionID >= 2)
+			return;
+		if (message.startsWith("id ")) {
 			String[] tempStr = message.split(" ");
 			String id = tempStr[1];
-			System.out.println("id: " + id);
-			
+
 			int userCode = Integer.valueOf(session.getId());
 			player[userCode].setId(id);
 			return;
 		}
-		System.out.println("메시지 전송: " + session.getId() + ": " + message);
 		String[] tempPos = message.split(" ");
 		int row = Integer.valueOf(tempPos[0]);
 		int col = Integer.valueOf(tempPos[1]);
-		int userCode = Integer.valueOf(session.getId()); 
-		
+		int userCode = Integer.valueOf(session.getId());
+
 		synchronized (clients) {
 			Position pos = new Position(row, col);
-			System.out.println("turn: " + userCode + " row: " + pos.getRow() + " col: " + pos.getCol());
-			
-			if(board.canPlaceStone(pos) && checkTurn(userCode)) {
+
+			if (board.canPlaceStone(pos) && checkTurn(userCode)) {
 				board.placeStone(pos, player[userCode]);
-				System.out.println("turn 증가 전: " + turn);
 				turn = (turn + 1) % 2;
-				System.out.println("turn 증가 후: " + turn);
-//				돌을 둘 경우 처리
+				// 돌을 둘 경우 처리
 				for (Session client : clients) { // 모든 클라이언트에게 메시지 전달
-					client.getBasicRemote().sendText(userCode+"|"+row+"|"+col);
+					client.getBasicRemote().sendText(userCode + "|" + row + "|" + col);
 				}
-				
-				if(checkEnd(pos, player[userCode])) {
-					clients = null;
-//					돌을 뒀더니 이겼을 경우 처리
+
+				// 돌을 뒀더니 이겼을 경우 처리
+				if (checkEnd(pos, player[userCode])) {
+					for (Session client : clients) { // 승자 메시지 전달
+						client.getBasicRemote().sendText(player[userCode].getId() + "님이 승리하였습니다.");
+					}
+					clients.clear();
 					return;
 				}
-			}else {
+			} else {
 				// 자기가 둘 수 없는 차례일 경우
 			}
 
@@ -92,26 +89,21 @@ public class ChatServer {
 
 	@OnClose // 클라이언트와의 연결이 끊기면 실행
 	public void onClose(Session session) {
-		clients.remove(session);
-		System.out.println("웹소켓 종료: " + session.getId());
 	}
 
 	@OnError
 	public void onError(Throwable e) {
-		System.out.println("에러 발생");
 		e.printStackTrace();
 	}
-	
-    public boolean checkTurn(int userCode) {
-    	System.out.println("받아온 turn: "+ userCode);
-    	System.out.println("BOARD의 turn: "+ turn);
-    	if(userCode== turn) {
-    		return true;
-    	}else {
-    		return false;
-    	}
-    }
-    
+
+	public boolean checkTurn(int userCode) {
+		if (userCode == turn) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	private boolean checkEnd(Position now, Player player) {
 		int minRow, maxRow, minCol, maxCol;
 
@@ -120,7 +112,7 @@ public class ChatServer {
 		} else {
 			minRow = 0;
 		}
-		
+
 		if (now.getRow() + 4 < board.getSize()) {
 			maxRow = now.getRow() + 4;
 		} else {
