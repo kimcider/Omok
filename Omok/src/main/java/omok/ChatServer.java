@@ -25,7 +25,6 @@ public class ChatServer {
 		player = new Player[2];
 		board = new Board(19);
 		turn = 0;
-		System.out.println("이거는되나");
 	}
 	private static Set<Session> clients = Collections.synchronizedSet(new HashSet<Session>());
 	// 순서를 유지하지 않고 저장하며, 중복 저장이 불가능하다.
@@ -70,7 +69,6 @@ public class ChatServer {
 			System.out.println("turn: " + userCode + " row: " + pos.getRow() + " col: " + pos.getCol());
 			
 			if(board.canPlaceStone(pos) && checkTurn(userCode)) {
-				System.out.println("여기까지 옴");
 				board.placeStone(pos, player[userCode]);
 				System.out.println("turn 증가 전: " + turn);
 				turn = (turn + 1) % 2;
@@ -122,7 +120,7 @@ public class ChatServer {
 		} else {
 			minRow = 0;
 		}
-
+		
 		if (now.getRow() + 4 < board.getSize()) {
 			maxRow = now.getRow() + 4;
 		} else {
