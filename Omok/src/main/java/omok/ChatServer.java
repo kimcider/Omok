@@ -33,10 +33,8 @@ public class ChatServer {
 	@OnOpen // 클라이언트 접속 시 실행
 	public void onOpen(Session session) {
 		int index = Integer.valueOf(session.getId());
-		System.out.println("sessionID: " + session.getId());
-		if("2".equals(session.getId())) {
-			return;
-		}
+		int sessionID = Integer.valueOf(session.getId());
+		if(sessionID >= 2) return;
 		clients.add(session); // 세션 추가
 		System.out.println("웹소켓 연결: " + session.getId());
 		
@@ -48,6 +46,8 @@ public class ChatServer {
 
 	@OnMessage // 메시지를 받으면 실행
 	public void onMessage(String message, Session session) throws IOException {
+		int sessionID = Integer.valueOf(session.getId());
+		if(sessionID >= 2) return;
 		if(message.startsWith("id ")) {
 			System.out.println(message);
 			String[] tempStr = message.split(" ");
@@ -79,7 +79,7 @@ public class ChatServer {
 				}
 				
 				if(checkEnd(pos, player[userCode])) {
-					System.exit(0);
+					clients = null;
 //					돌을 뒀더니 이겼을 경우 처리
 					return;
 				}
